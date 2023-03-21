@@ -4,7 +4,7 @@ class ec_order {
     public function __construct()
     {
         global $wpdb;
-        $this->_order = $wpdb->prefix.'order'; //wp_order
+        $this->_order = $wpdb->prefix.'orders'; //wp_order
     }
     public function getAll()
     {
@@ -20,6 +20,7 @@ class ec_order {
         $sql = "SELECT count(id) FROM $this->_order";
         $total_items = $wpdb->get_var($sql);
         $paged = 1;
+
         //Fun phần trang
         //-Limit
         //-Total_pages
@@ -31,8 +32,14 @@ class ec_order {
         $sql.=" ORDER BY id DESC";
         $sql.=" LIMIT $limit OFFSET $offset";
 
-        $results = $wpdb->get_results($sql );
-        return $results;
+        $results = $wpdb->get_results($sql);
+        //return $results;
+
+        return [
+            'total_pages' => $total_pages,
+            'total_item' => $total_items,
+            'results' => $results
+        ];
 
     }
     public function findByID($id)

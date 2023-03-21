@@ -1,11 +1,21 @@
 <?php
+
+$orderFunction = new ec_order();
+$res = $orderFunction->paginate(2);
+
+
+$items = $res['results'];
+// $total_pages = $res['total_pages'];
+// $total_items = $res['total_items'];
+print_r($items);
+
 ?>
 <div class="wrap">
     <h1 class="wp-heading-inline">Order Managers</h1>
     <hr class="wp-header-end">
 
 
-    <h2 class="screen-reader-text">Filter posts list</h2>
+    <h2 class="screen-reader-text">Filter order list</h2>
     <ul class="subsubsub">
         <li class="all"><a href="edit.php?post_type=post" class="current" aria-current="page">All<span class="count"> (0)</span></a> |</li>
         <li class="publish"><a href="#&amp;post_type=post">New<span class="count"> (0)</span></a>|</li>
@@ -61,77 +71,67 @@
         </div>
         <h2 class="screen-reader-text">Posts list</h2>
         <table class="wp-list-table widefat fixed striped table-view-list posts">
+
             <thead>
                 <tr>
                     <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1">Select All</label><input id="cb-select-all-1" type="checkbox"></td>
-                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc"><a href="http://localhost/wp-admin/edit.php?orderby=title&amp;order=asc"><span>Title</span><span class="sorting-indicator"></span></a></th>
-                    <th scope="col" id="author" class="manage-column column-author">Author</th>
-                    <th scope="col" id="categories" class="manage-column column-categories">Categories</th>
-                    <th scope="col" id="tags" class="manage-column column-tags">Tags</th>
-                    <th scope="col" id="comments" class="manage-column column-comments num sortable desc"><a href="http://localhost/wp-admin/edit.php?orderby=comment_count&amp;order=asc"><span><span class="vers comment-grey-bubble" title="Comments" aria-hidden="true"></span><span class="screen-reader-text">Comments</span></span><span class="sorting-indicator"></span></a></th>
-                    <th scope="col" id="date" class="manage-column column-date sortable asc"><a href="http://localhost/wp-admin/edit.php?orderby=date&amp;order=desc"><span>Date</span><span class="sorting-indicator"></span></a></th>
+                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc"><a href="#"><span>Order Id</span><span class="sorting-indicator"></span></a></th>
+                    <th scope="col" id="author" class="manage-column column-author">Total</th>
+                    <th scope="col" id="categories" class="manage-column column-categories">Customers</th>
+                    <th scope="col" id="tags" class="manage-column column-tags">Status</th>
+                    <th scope="col" id="date" class="manage-column column-date sortable asc"><a href="#"><span>Date</span><span class="sorting-indicator"></span></a></th>
                 </tr>
             </thead>
 
+
             <tbody id="the-list">
+                <?php foreach ($items as $item): ?>
                 <tr id="post-1" class="iedit author-self level-0 post-1 type-post status-publish format-standard hentry category-uncategorized">
                     <th scope="row" class="check-column"> <label class="screen-reader-text" for="cb-select-1">
-                            Select Hello world! </label>
+                          </label>
                         <input id="cb-select-1" type="checkbox" name="post[]" value="1">
                         <div class="locked-indicator">
                             <span class="locked-indicator-icon" aria-hidden="true"></span>
                             <span class="screen-reader-text">
-                                “Hello world!” is locked </span>
+                              </span>
                         </div>
                     </th>
                     <td class="title column-title has-row-actions column-primary page-title" data-colname="Title">
                         <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
-                        <strong><a class="row-title" href="http://localhost/wp-admin/post.php?post=1&amp;action=edit" aria-label="“Hello world!” (Edit)">Hello world!</a></strong>
-
-                        <div class="hidden" id="inline_1">
-                            <div class="post_title">Hello world!</div>
-                            <div class="post_name">hello-world</div>
-                            <div class="post_author">1</div>
-                            <div class="comment_status">open</div>
-                            <div class="ping_status">open</div>
-                            <div class="_status">publish</div>
-                            <div class="jj">20</div>
-                            <div class="mm">03</div>
-                            <div class="aa">2023</div>
-                            <div class="hh">02</div>
-                            <div class="mn">39</div>
-                            <div class="ss">08</div>
-                            <div class="post_password"></div>
-                            <div class="page_template">default</div>
-                            <div class="post_category" id="category_1">1</div>
-                            <div class="tags_input" id="post_tag_1"></div>
-                            <div class="sticky"></div>
-                            <div class="post_format"></div>
-                        </div>
-                        <div class="row-actions"><span class="edit"><a href="http://localhost/wp-admin/post.php?post=1&amp;action=edit" aria-label="Edit “Hello world!”">Edit</a> | </span><span class="inline hide-if-no-js"><button type="button" class="button-link editinline" aria-label="Quick edit “Hello world!” inline" aria-expanded="false">Quick&nbsp;Edit</button> | </span><span class="trash"><a href="http://localhost/wp-admin/post.php?post=1&amp;action=trash&amp;_wpnonce=bc22939a6f" class="submitdelete" aria-label="Move “Hello world!” to the Trash">Trash</a> | </span><span class="view"><a href="http://localhost/hello-world/" rel="bookmark" aria-label="View “Hello world!”">View</a></span></div><button type="button" class="toggle-row"><span class="screen-reader-text">Show more details</span></button>
+                        <strong>
+                            <a class="row-title" href="#"> <?= $item->id ?> </a>
+                        </strong>
                     </td>
-                    <td class="author column-author" data-colname="Author"><a href="edit.php?post_type=post&amp;author=1">khang.nguyen</a></td>
-                    <td class="categories column-categories" data-colname="Categories"><a href="edit.php?category_name=uncategorized">Uncategorized</a></td>
-                    <td class="tags column-tags" data-colname="Tags"><span aria-hidden="true">—</span><span class="screen-reader-text">No tags</span></td>
+                    <td class="author column-author" data-colname="Author">
+                        <a href="#"><?= number_format($item->total) ?></a>
+                    </td>
+                    <td class="categories column-categories" data-colname="Categories">
+                        <a href="#"><?= $item->customer_name ?></a>
+                    </td>
+                    
                     <td class="comments column-comments" data-colname="Comments">
-                        <div class="post-com-count-wrapper">
-                            <a href="http://localhost/wp-admin/edit-comments.php?p=1&amp;comment_status=approved" class="post-com-count post-com-count-approved"><span class="comment-count-approved" aria-hidden="true">1</span><span class="screen-reader-text">1 comment</span></a><span class="post-com-count post-com-count-pending post-com-count-no-pending"><span class="comment-count comment-count-no-pending" aria-hidden="true">0</span><span class="screen-reader-text">No pending comments</span></span>
-                        </div>
+                    <select name="status_order" id="start_of_week">
+                        <option value="0" >New</option>
+                        <option value="1" >Complete</option>
+                        <option value="1" >Cancel</option>
                     </td>
-                    <td class="date column-date" data-colname="Date">Published<br>2023/03/20 at 2:39 am</td>
+
+                    <td class="date column-date" data-colname="Date"><?= $item->created ?></td>
                 </tr>
+                <?php endforeach; ?>
             </tbody>
 
             <tfoot>
+            <thead>
                 <tr>
-                    <td class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-2">Select All</label><input id="cb-select-all-2" type="checkbox"></td>
-                    <th scope="col" class="manage-column column-title column-primary sortable desc"><a href="http://localhost/wp-admin/edit.php?orderby=title&amp;order=asc"><span>Title</span><span class="sorting-indicator"></span></a></th>
-                    <th scope="col" class="manage-column column-author">Author</th>
-                    <th scope="col" class="manage-column column-categories">Categories</th>
-                    <th scope="col" class="manage-column column-tags">Tags</th>
-                    <th scope="col" class="manage-column column-comments num sortable desc"><a href="http://localhost/wp-admin/edit.php?orderby=comment_count&amp;order=asc"><span><span class="vers comment-grey-bubble" title="Comments" aria-hidden="true"></span><span class="screen-reader-text">Comments</span></span><span class="sorting-indicator"></span></a></th>
-                    <th scope="col" class="manage-column column-date sortable asc"><a href="http://localhost/wp-admin/edit.php?orderby=date&amp;order=desc"><span>Date</span><span class="sorting-indicator"></span></a></th>
+                    <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1">Select All</label><input id="cb-select-all-1" type="checkbox"></td>
+                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc"><a href="#"><span>Order Id</span><span class="sorting-indicator"></span></a></th>
+                    <th scope="col" id="author" class="manage-column column-author">Total</th>
+                    <th scope="col" id="categories" class="manage-column column-categories">Customers</th>
+                    <th scope="col" id="tags" class="manage-column column-tags">Status</th>
+                    <th scope="col" id="date" class="manage-column column-date sortable asc"><a href="#"><span>Date</span><span class="sorting-indicator"></span></a></th>
                 </tr>
+            </thead>
             </tfoot>
 
         </table>

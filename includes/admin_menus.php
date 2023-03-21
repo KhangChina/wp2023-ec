@@ -18,8 +18,8 @@ function ec_admin_menu()
         'Other', 
         'Other', 
         'manage_options', 
-        'ec_other',//menu_slug
-        'ec_other_ui', 
+        'ec_order',//menu_slug
+        'ec_order_ui', 
         26
     );
     add_submenu_page(
@@ -36,13 +36,13 @@ function ec_admin_menu()
 
 function ec_dashboard_ui()
 {
-    echo 'ec_dashboard';
+   include_once WP2023_PATH.'includes/admin_pages/dashboard.php';
 }
-function ec_other_ui()
+function ec_order_ui()
 {
-    echo 'ec_other';
+    include_once WP2023_PATH.'includes/admin_pages/order.php';
 }
 function ec_config_ui()
 {
-    echo 'ec_config_ui';
+    include_once WP2023_PATH.'includes/admin_pages/config.php';
 }

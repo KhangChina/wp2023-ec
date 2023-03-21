@@ -32,7 +32,7 @@ function pluginActive()
     // Tạo csdl
     global $table_prefix, $wpdb;
     $tblname = 'orders';
-    $wp_track_table = $table_prefix . "$tblname ";
+    $wp_track_table = $table_prefix . "$tblname";
     $charset_collate = $wpdb->get_charset_collate();
     if ($wpdb->get_var("show tables like '$wp_track_table'") != $wp_track_table) {
         $sql = "CREATE TABLE $wp_track_table  (
@@ -43,19 +43,41 @@ function pluginActive()
             payment_method varchar(225) NULL DEFAULT NULL,
             customer_name varchar(225) NULL DEFAULT NULL,
             customer_phone varchar(225) NULL DEFAULT NULL,
-            customer_email varchar(25) NULL DEFAULT NULL,
+            customer_email varchar(25)  NULL DEFAULT NULL,
             note text NULL,
             deleted tinyint NOT NULL DEFAULT 0,
             PRIMARY KEY (id) USING BTREE
           ) $charset_collate;";
             require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
             dbDelta($sql);
-
     }
 
 
     //Tạo seeding data
-
+    $wpdb->insert( 
+        $wp_track_table, 
+        [
+            'created' => current_time('mysql'),
+            'total' => '20000', 
+            'payment_method' => 'cod', 
+            'customer_name' => 'Đào Văn Đức',
+            'customer_phone' => '0964440776',
+            'customer_email'=>'duc.dao@htgsoft.com',
+            'note'=>'Giao đến ETC' 
+        ]
+    );
+    $wpdb->insert( 
+        $wp_track_table, 
+        [
+            'created' => current_time('mysql'),
+            'total' => '90000', 
+            'payment_method' => 'Bank', 
+            'customer_name' => 'Nguyễn Văn Hải',
+            'customer_phone' => '0965550776',
+            'customer_email'=>'hai.nguyen@htgsoft.com',
+            'note'=>'Giao đến ETC' 
+        ]
+    );
     //Tạo option
 }
 
@@ -64,7 +86,7 @@ function pluginDeactivation()
 {
     global $table_prefix;
     $tblname = 'orders';
-    $wp_track_table = $table_prefix . "$tblname ";
+    $wp_track_table = $table_prefix."$tblname";
     $sql = "DROP TABLE IF EXISTS $wp_track_table ;";
     require_once(ABSPATH . '/wp-admin/includes/upgrade.php');
     $wpdb->query($sql);

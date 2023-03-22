@@ -59,7 +59,7 @@ function pluginActive()
         [
             'created' => current_time('mysql'),
             'total' => '20000', 
-            'payment_method' => 'cod', 
+            'payment_method' => 'cod',
             'customer_name' => 'Đào Văn Đức',
             'customer_phone' => '0964440776',
             'customer_email'=>'duc.dao@htgsoft.com',
@@ -70,12 +70,25 @@ function pluginActive()
         $wp_track_table, 
         [
             'created' => current_time('mysql'),
-            'total' => '90000', 
-            'payment_method' => 'Bank', 
+            'total' => '90000',
+            'payment_method' => 'bank',
             'customer_name' => 'Nguyễn Văn Hải',
             'customer_phone' => '0965550776',
             'customer_email'=>'hai.nguyen@htgsoft.com',
-            'note'=>'Giao đến ETC' 
+            'note'=>'Giao đến ETC'
+        ]
+    );
+    $wpdb->insert( 
+        $wp_track_table, 
+        [
+            'created' => current_time('mysql'),
+            'total' => '80000',
+            'payment_method' => 'Bank',
+            'customer_name' => 'Nguyễn Thị Heo',
+            'customer_phone' => '09651110666',
+            'customer_email'=>'heo.nguyen@htgsoft.com',
+            'note'=>'Giao đến ETC',
+            'status'=>'completed'
         ]
     );
     //Tạo option

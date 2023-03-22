@@ -2,12 +2,21 @@
 
 $orderFunction = new ec_order();
 $res = $orderFunction->paginate(2);
+$count = $orderFunction->countAll();
 
-
+//Gird 
 $items = $res['results'];
-// $total_pages = $res['total_pages'];
-// $total_items = $res['total_items'];
-print_r($items);
+$total_pages = $res['total_pages'];
+$total_items = $res['total_items'];
+
+//count data
+
+
+$total_items_all = $count['total_items_all'];
+$total_items_pending = $count['total_items_pending'];
+$total_items_completed = $count['total_items_completed'];
+$total_items_canceled = $count['total_items_canceled']
+
 
 ?>
 <div class="wrap">
@@ -17,23 +26,22 @@ print_r($items);
 
     <h2 class="screen-reader-text">Filter order list</h2>
     <ul class="subsubsub">
-        <li class="all"><a href="edit.php?post_type=post" class="current" aria-current="page">All<span class="count"> (0)</span></a> |</li>
-        <li class="publish"><a href="#&amp;post_type=post">New<span class="count"> (0)</span></a>|</li>
-        <li class="publish"><a href="#&amp;post_type=post">Pending<span class="count"> (0)</span></a>|</li>
-        <li class="publish"><a href="#&amp;post_type=post">Awaiting Shipment<span class="count"> (0)</span></a>|</li>
-        <li class="publish"><a href="#&amp;post_type=post">Complete<span class="count"> (0)</span></a>|</li>
-        <li class="publish"><a href="#&amp;post_type=post">Cancel<span class="count"> (0)</span></a>|</li>
+        <li class="all"><a href="admin.php?page=ec_order" class="current" aria-current="page">All<span class="count"> (<?= $total_items_all ?>)</span></a> |</li>
+        <li class="publish"><a href="admin.php?page=ec_order&status_order=pending">New<span class="count"> (<?= $total_items_pending ?>)</span></a>|</li>
+        <li class="publish"><a href="admin.php?page=ec_order&status_order=completed">Complete<span class="count"> (<?= $total_items_completed ?>)</span></a>|</li>
+        <li class="publish"><a href="admin.php?page=ec_order&status_order=canceled">Cancel<span class="count"> (<?= $total_items_canceled ?>)</span></a>|</li>
     </ul>
     <form id="posts-filter" method="get">
 
         <p class="search-box">
             <label class="screen-reader-text" for="post-search-input">Search order:</label>
-            <input type="search" id="post-search-input" name="s" value="" placeholder="#Order">
+            <input type="search" id="post-search-input" name="search" value="" placeholder="#Order">
             <input type="submit" id="search-submit" class="button" value="Search Order">
         </p>
 
-        <input type="hidden" name="post_status" class="post_status_page" value="all">
-        <input type="hidden" name="post_type" class="post_type_page" value="post">
+        <!-- Trả về page sau khi post data đi -->
+        <input type="hidden" name="page" class="post_status_page" value="ec_order">
+        <!-- <input type="hidden" name="post_type" class="post_type_page" value="post"> -->
 
 
 
@@ -41,26 +49,23 @@ print_r($items);
         <div class="tablenav top">
 
             <div class="alignleft actions bulkactions">
-                <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label><select name="action" id="bulk-action-selector-top">
+                <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+                <select name="action" id="bulk-action-selector-top">
                     <option value="-1">Bulk actions</option>
-                    <option value="edit" class="hide-if-no-js">Edit</option>
                     <option value="trash">Move to Trash</option>
                 </select>
                 <input type="submit" id="doaction" class="button action" value="Apply">
             </div>
+
             <div class="alignleft actions">
                 <label for="filter-by-date" class="screen-reader-text">Filter by date</label>
-                <select name="m" id="filter-by-date">
+                <select name="date_filter" id="filter-by-date">
                     <option selected="selected" value="0">All dates</option>
                     <option value="202303">March 2023</option>
                 </select>
-                <label class="screen-reader-text" for="cat">Filter by category</label><select name="cat" id="cat" class="postform">
-                    <option value="0">All Categories</option>
-                    <option class="level-0" value="1">Uncategorized</option>
-                </select>
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">
             </div>
-            <div class="tablenav-pages one-page"><span class="displaying-num">1 item</span>
+            <div class="tablenav-pages one-page"><span class="displaying-num"><?=$total_items?> item</span>
                 <span class="pagination-links"><span class="tablenav-pages-navspan button disabled" aria-hidden="true">«</span>
                     <span class="tablenav-pages-navspan button disabled" aria-hidden="true">‹</span>
                     <span class="paging-input"><label for="current-page-selector" class="screen-reader-text">Current Page</label><input class="current-page" id="current-page-selector" type="text" name="paged" value="1" size="1" aria-describedby="table-paging"><span class="tablenav-paging-text"> of <span class="total-pages">1</span></span></span>
@@ -78,6 +83,7 @@ print_r($items);
                     <th scope="col" id="title" class="manage-column column-title column-primary sortable desc"><a href="#"><span>Order Id</span><span class="sorting-indicator"></span></a></th>
                     <th scope="col" id="author" class="manage-column column-author">Total</th>
                     <th scope="col" id="categories" class="manage-column column-categories">Customers</th>
+                    <th scope="col" id="categories" class="manage-column column-categories">Phone</th>
                     <th scope="col" id="tags" class="manage-column column-tags">Status</th>
                     <th scope="col" id="date" class="manage-column column-date sortable asc"><a href="#"><span>Date</span><span class="sorting-indicator"></span></a></th>
                 </tr>
@@ -85,76 +91,47 @@ print_r($items);
 
 
             <tbody id="the-list">
-                <?php foreach ($items as $item): ?>
-                <tr id="post-1" class="iedit author-self level-0 post-1 type-post status-publish format-standard hentry category-uncategorized">
-                    <th scope="row" class="check-column"> <label class="screen-reader-text" for="cb-select-1">
-                          </label>
-                        <input id="cb-select-1" type="checkbox" name="post[]" value="1">
-                        <div class="locked-indicator">
-                            <span class="locked-indicator-icon" aria-hidden="true"></span>
-                            <span class="screen-reader-text">
-                              </span>
-                        </div>
-                    </th>
-                    <td class="title column-title has-row-actions column-primary page-title" data-colname="Title">
-                        <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
-                        <strong>
-                            <a class="row-title" href="#"> <?= $item->id ?> </a>
-                        </strong>
-                    </td>
-                    <td class="author column-author" data-colname="Author">
-                        <a href="#"><?= number_format($item->total) ?></a>
-                    </td>
-                    <td class="categories column-categories" data-colname="Categories">
-                        <a href="#"><?= $item->customer_name ?></a>
-                    </td>
-                    
-                    <td class="comments column-comments" data-colname="Comments">
-                    <select name="status_order" id="start_of_week">
-                        <option value="0" >New</option>
-                        <option value="1" >Complete</option>
-                        <option value="1" >Cancel</option>
-                    </td>
+                <?php foreach ($items as $item) : ?>
+                    <tr id="post-1" class="iedit author-self level-0 post-1 type-post status-publish format-standard hentry category-uncategorized">
+                        <th scope="row" class="check-column"> <label class="screen-reader-text" for="cb-select-1">
+                            </label>
+                            <input id="cb-select-1" type="checkbox" name="post[]" value="1">
+                            <div class="locked-indicator">
+                                <span class="locked-indicator-icon" aria-hidden="true"></span>
+                                <span class="screen-reader-text">
+                                </span>
+                            </div>
+                        </th>
+                        <td class="title column-title has-row-actions column-primary page-title" data-colname="Title">
+                            <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
+                            <strong>
+                                <a class="row-title" href="#"> <?= $item->id ?> </a>
+                            </strong>
+                        </td>
+                        <td class="author column-author" data-colname="Author">
+                            <a href="#"><?= number_format($item->total) ?></a>
+                        </td>
+                        <td class="categories column-categories" data-colname="Categories">
+                            <a href="#"><?= $item->customer_name ?></a>
+                        </td>
+                        <td class="categories column-categories" data-colname="Categories">
+                            <a href="#"><?= $item->customer_phone ?></a>
+                        </td>
 
-                    <td class="date column-date" data-colname="Date"><?= $item->created ?></td>
-                </tr>
+                        <td class="comments column-comments" data-colname="Comments">
+                            <select name="status_order_grid" id="start_of_week">
+                                <option value="pending">New</option>
+                                <option value="complete">Complete</option>
+                                <option value="cancel">Cancel</option>
+                        </td>
+
+                        <td class="date column-date" data-colname="Date"><?= date('d-m-Y', strtotime($item->created))  ?></td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
-
-            <tfoot>
-            <thead>
-                <tr>
-                    <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1">Select All</label><input id="cb-select-all-1" type="checkbox"></td>
-                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc"><a href="#"><span>Order Id</span><span class="sorting-indicator"></span></a></th>
-                    <th scope="col" id="author" class="manage-column column-author">Total</th>
-                    <th scope="col" id="categories" class="manage-column column-categories">Customers</th>
-                    <th scope="col" id="tags" class="manage-column column-tags">Status</th>
-                    <th scope="col" id="date" class="manage-column column-date sortable asc"><a href="#"><span>Date</span><span class="sorting-indicator"></span></a></th>
-                </tr>
-            </thead>
-            </tfoot>
-
         </table>
         <div class="tablenav bottom">
-
-            <div class="alignleft actions bulkactions">
-                <label for="bulk-action-selector-bottom" class="screen-reader-text">Select bulk action</label><select name="action2" id="bulk-action-selector-bottom">
-                    <option value="-1">Bulk actions</option>
-                    <option value="edit" class="hide-if-no-js">Edit</option>
-                    <option value="trash">Move to Trash</option>
-                </select>
-                <input type="submit" id="doaction2" class="button action" value="Apply">
-            </div>
-            <div class="alignleft actions">
-            </div>
-            <div class="tablenav-pages one-page"><span class="displaying-num">1 item</span>
-                <span class="pagination-links"><span class="tablenav-pages-navspan button disabled" aria-hidden="true">«</span>
-                    <span class="tablenav-pages-navspan button disabled" aria-hidden="true">‹</span>
-                    <span class="screen-reader-text">Current Page</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">1 of <span class="total-pages">1</span></span></span>
-                    <span class="tablenav-pages-navspan button disabled" aria-hidden="true">›</span>
-                    <span class="tablenav-pages-navspan button disabled" aria-hidden="true">»</span></span>
-            </div>
-            <br class="clear">
+            <?php include_once WP2023_PATH . 'includes/templates/elements/elements-paginate.php'; ?>
         </div>
 
     </form>

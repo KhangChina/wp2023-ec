@@ -1,21 +1,28 @@
 <?php
 
 $orderFunction = new ec_order();
-$res = $orderFunction->paginate(2);
-$count = $orderFunction->countAll();
 
-//Gird 
+//Loaddata
+$res = $orderFunction->paginate(2);
 $items = $res['results'];
 $total_pages = $res['total_pages'];
 $total_items = $res['total_items'];
 
-//count data
-
-
+//Count data
+$count = $orderFunction->countAll();
 $total_items_all = $count['total_items_all'];
 $total_items_pending = $count['total_items_pending'];
 $total_items_completed = $count['total_items_completed'];
-$total_items_canceled = $count['total_items_canceled']
+$total_items_canceled = $count['total_items_canceled'];
+//Action
+$action = isset($_REQUEST['action']) ?$_REQUEST['action']:'';
+if($action=='trash')
+{
+    //Kiểm tra có chọn hay ko
+
+    //foreach && Trash
+    //wp_redirect()
+}
 
 
 ?>
@@ -95,7 +102,7 @@ $total_items_canceled = $count['total_items_canceled']
                     <tr id="post-1" class="iedit author-self level-0 post-1 type-post status-publish format-standard hentry category-uncategorized">
                         <th scope="row" class="check-column"> <label class="screen-reader-text" for="cb-select-1">
                             </label>
-                            <input id="cb-select-1" type="checkbox" name="post[]" value="1">
+                            <input id="cb-select-1" type="checkbox" name="post[]" value="<?=$item->id?>">
                             <div class="locked-indicator">
                                 <span class="locked-indicator-icon" aria-hidden="true"></span>
                                 <span class="screen-reader-text">

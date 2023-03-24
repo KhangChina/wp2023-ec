@@ -19,10 +19,10 @@ class ec_order
     {
         global $wpdb;
         $sql = "SELECT count(id) FROM $this->_order WHERE deleted = 0";
-        $total_items = $wpdb->get_var($sql); 
-        $total_items_pending = $wpdb->get_var($sql." AND status = 'pending'");
-        $total_items_completed = $wpdb->get_var($sql." AND status = 'completed'");
-        $total_items_canceled = $wpdb->get_var($sql." AND status = 'canceled'");
+        $total_items = $wpdb->get_var($sql);
+        $total_items_pending = $wpdb->get_var($sql . " AND status = 'pending'");
+        $total_items_completed = $wpdb->get_var($sql . " AND status = 'completed'");
+        $total_items_canceled = $wpdb->get_var($sql . " AND status = 'canceled'");
 
         return [
             'total_items_all' => $total_items,
@@ -30,7 +30,6 @@ class ec_order
             'total_items_completed' => $total_items_completed,
             'total_items_canceled' => $total_items_canceled
         ];
-
     }
     public function paginate($limit = 20)
     {
@@ -54,7 +53,7 @@ class ec_order
         // var_dump($sql);
 
         $total_items = $wpdb->get_var($sql);
-        
+
 
 
         //Fun phần trang
@@ -102,11 +101,13 @@ class ec_order
     }
     public function update($id, $data)
     {
+       
         global $wpdb;
         $wpdb->update($this->_order, $data, [
             'id' => $id
         ]);
-        return true;
+        $item = $this->findByID($id);
+        return  $item;
     }
     public function delete($id)
     {
@@ -119,23 +120,29 @@ class ec_order
     public function trash($id)
     {
         global $wpdb;
-        $wpdb->update($this->_order, [
-            'deleted' => 1
-        ], 
-        [
-            'id' => $id
-        ]);
+        $wpdb->update(
+            $this->_order,
+            [
+                'deleted' => 1
+            ],
+            [
+                'id' => $id
+            ]
+        );
         return true;
     }
-    public function changeStatus($order_id,$status_order)
-    { 
+    public function changeStatus($order_id, $status_order)
+    {
         global $wpdb;
-        $wpdb->update($this->_order, [
-            'status' => $status_order
-        ], 
-        [
-            'id' => $order_id
-        ]);
+        $wpdb->update(
+            $this->_order,
+            [
+                'status' => $status_order
+            ],
+            [
+                'id' => $order_id
+            ]
+        );
         return true;
     }
 }

@@ -36,10 +36,10 @@ class ec_order
     {
         global $wpdb;
 
-        print_r($_REQUEST);
+        // print_r($_REQUEST);
         $search = isset($_REQUEST['search']) ? $_REQUEST['search'] : '';
         $status_order  = isset($_REQUEST['status_order']) ? $_REQUEST['status_order'] : '';
-
+        $paged = isset($_REQUEST['paged']) ? $_REQUEST['paged'] : 1;
 
         //Lấy tổng số records
         $sql = "SELECT count(id) FROM $this->_order WHERE deleted = 0";
@@ -54,7 +54,7 @@ class ec_order
         // var_dump($sql);
 
         $total_items = $wpdb->get_var($sql);
-        $paged = 1;
+        
 
 
         //Fun phần trang
@@ -113,6 +113,28 @@ class ec_order
         global $wpdb;
         $wpdb->delete($this->_order, [
             'id' => $id
+        ]);
+        return true;
+    }
+    public function trash($id)
+    {
+        global $wpdb;
+        $wpdb->update($this->_order, [
+            'deleted' => 1
+        ], 
+        [
+            'id' => $id
+        ]);
+        return true;
+    }
+    public function changeStatus($order_id,$status_order)
+    { 
+        global $wpdb;
+        $wpdb->update($this->_order, [
+            'status' => $status_order
+        ], 
+        [
+            'id' => $order_id
         ]);
         return true;
     }

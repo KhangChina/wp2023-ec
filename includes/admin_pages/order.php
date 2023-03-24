@@ -14,15 +14,29 @@ $total_items_all = $count['total_items_all'];
 $total_items_pending = $count['total_items_pending'];
 $total_items_completed = $count['total_items_completed'];
 $total_items_canceled = $count['total_items_canceled'];
-//Action
-$action = isset($_REQUEST['action']) ?$_REQUEST['action']:'';
-if($action=='trash')
-{
-    //Kiểm tra có chọn hay ko
 
-    //foreach && Trash
-    //wp_redirect()
+//Action trash
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+
+function wp2023_redirect($url)
+{
+    echo ("<script>location.href='" . $url . "'</script>");
 }
+
+if ($action == 'trash') {
+    $orther_id = $_REQUEST['post'];
+    //Kiểm tra có chọn hay ko
+    if (count($orther_id)) {
+        foreach ($orther_id as $id) {
+            $orderFunction->trash($id);
+        }
+    }
+    //foreach && Trash
+    wp2023_redirect('admin.php?page=ec_order');
+    exit();
+}
+
+
 
 
 ?>
@@ -72,7 +86,7 @@ if($action=='trash')
                 </select>
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">
             </div>
-            <div class="tablenav-pages one-page"><span class="displaying-num"><?=$total_items?> item</span>
+            <div class="tablenav-pages one-page"><span class="displaying-num"><?= $total_items ?> item</span>
                 <span class="pagination-links"><span class="tablenav-pages-navspan button disabled" aria-hidden="true">«</span>
                     <span class="tablenav-pages-navspan button disabled" aria-hidden="true">‹</span>
                     <span class="paging-input"><label for="current-page-selector" class="screen-reader-text">Current Page</label><input class="current-page" id="current-page-selector" type="text" name="paged" value="1" size="1" aria-describedby="table-paging"><span class="tablenav-paging-text"> of <span class="total-pages">1</span></span></span>
@@ -102,7 +116,7 @@ if($action=='trash')
                     <tr id="post-1" class="iedit author-self level-0 post-1 type-post status-publish format-standard hentry category-uncategorized">
                         <th scope="row" class="check-column"> <label class="screen-reader-text" for="cb-select-1">
                             </label>
-                            <input id="cb-select-1" type="checkbox" name="post[]" value="<?=$item->id?>">
+                            <input id="cb-select-1" type="checkbox" name="post[]" value="<?= $item->id ?>">
                             <div class="locked-indicator">
                                 <span class="locked-indicator-icon" aria-hidden="true"></span>
                                 <span class="screen-reader-text">
@@ -126,10 +140,10 @@ if($action=='trash')
                         </td>
 
                         <td class="comments column-comments" data-colname="Comments">
-                            <select name="status_order_grid" id="start_of_week">
-                                <option value="pending">New</option>
-                                <option value="complete">Complete</option>
-                                <option value="cancel">Cancel</option>
+                            <select name="" class="status_order_grid" data-id="<?= $item->id ?>" id="start_of_week">
+                                <option <?= $item-> status == 'pending' ? 'selected' : '' ?> value="pending">New</option>
+                                <option <?= $item-> status == 'completed' ? 'selected' : '' ?> value="completed">Complete</option>
+                                <option <?= $item-> status == 'canceled' ? 'selected' : '' ?> value="canceled">Cancel</option>
                         </td>
 
                         <td class="date column-date" data-colname="Date"><?= date('d-m-Y', strtotime($item->created))  ?></td>
@@ -482,3 +496,31 @@ if($action=='trash')
     <div class="clear"></div>
 
 </div>
+
+<script>
+    //Đường dẫn xử lý ajax
+    let ajax_url = '<?= admin_url('admin-ajax.php'); ?>';
+    jQuery(document).ready(function() {
+        jQuery('.status_order_grid').on('change', function() {
+            let order_id = jQuery(this).data('id');//data-id
+            let status = jQuery(this).val();
+            jQuery.ajax({
+                url:ajax_url,
+                method:'POST',
+                dataType:'json',
+                data: {
+                    action:'ec_change_status_order',
+                    order_id: order_id,
+                    status: status
+                },
+                success: function(res){
+
+                },
+                error:function(res_error){
+
+                }
+            })
+        });
+    })
+
+</script>

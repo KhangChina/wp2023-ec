@@ -9,3 +9,5 @@ include_once WP2023_PATH.'includes/admin_columns.php';
 include_once WP2023_PATH.'includes/admin_menus.php';
 //Thêm class chức năng order
 include_once WP2023_PATH.'includes/class/ec_order.php';
+//Sử dụng ajax
+include_once WP2023_PATH.'includes/admin_ajaxs.php';
